@@ -49,11 +49,12 @@ public class Installer {
 	public void setemail(String email) {
 		this.email=email;
 	}
-	public void setphone(String pho) {
-		this.password=pho;
+	public void setphone(String phone) {
+		this.phone=phone;
+
 	}
-	public void setpassword(String pa) {
-		this.phone=pa;
+	public void setpassword(String pass) {
+		this.password=pass;
 	}
 	
 	
