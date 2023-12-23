@@ -159,7 +159,7 @@ private static final String QUANTITY_LITERAL = "quantity";
 					vailability="not avaliable";
 				}
 
-				LOGGER.info(String.format("%d\t%s\t%s\t%d$\t%s\t%d Stars", id, name, description, price, vailability, rs.getInt("evaluation")));
+				LOGGER.info(String.format("%d\t%s\t%s\t%d$\t%s\t%d Stars", id, name, description, price, vailability, rs.getInt(7)));
 		}
 			stm.close();
 			rs.close();
