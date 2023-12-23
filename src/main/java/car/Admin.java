@@ -11,10 +11,12 @@ public class Admin {
 	Connection con=null;
 	PreparedStatement stm=null;
 	ResultSet rs=null;
-    public static final Logger LOGGER = Logger.getLogger(Login.class.getName());
+    public static final Logger LOGGER = Logger.getLogger(Admin.class.getName());
     public static final Scanner SCANN = new Scanner(System.in);
     private static final String ENTER_CATEGORY_MESSAGE = "Enter name of category";
     private static final String TAB_SPACING = "\t\t\t";
+    private static final String ERROR_PREFIX = "An error occurred: ";
+
     private  String scan ;
     private static Boolean checkprod = false;
     private static Boolean flaginsertP=false;
@@ -28,7 +30,8 @@ public class Admin {
 	private Installer installer;
 	private Order order=new Order();
        public Admin() {
-    	   
+           // No actions are performed.
+  
        }
        
        
@@ -61,7 +64,7 @@ public class Admin {
            String category=SCANN.nextLine();
           if( !cheackCategory(category)) {
         	  addCategory(category); 
-   		   if(flaginsertC) {
+   		   if(getFlaginsertC()) {
    			LOGGER.info("Insert category succssesfuly");  
 		          }
 		          else {
@@ -154,7 +157,7 @@ public class Admin {
    		   rs.close();
    	   }
    	   catch(Exception e) {
-           LOGGER.severe("An error occurred: " + e.getMessage());
+           LOGGER.severe(ERROR_PREFIX + e.getMessage());
    		 }
     	  return flag;
     }
@@ -176,13 +179,11 @@ public class Admin {
     		   stm.setString(1,category);
 
     		   int num=stm.executeUpdate();
-    		   if (num!=0) setFlaginsertC(true);
-    		   else setFlaginsertC(false);
-
+    		   setFlaginsertC(num != 0);
     		   stm.close();
     	   }
     	   catch(Exception e) {
-    	        LOGGER.severe("An error occurred: " + e.getMessage());
+    	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
     	   } 
        }
        public void deleteCategory(String categoryy){
@@ -191,13 +192,12 @@ public class Admin {
     		   String sql="Delete from Category where category='" +categoryy+"' ";
     		   stm=con.prepareStatement(sql);
     		   int num =stm.executeUpdate();
-    		   if (num!=0) setFlagdeleteC(true);
-    		   else setFlagdeleteC(false);
+    		   setFlagdeleteC(num != 0);
     		   stm.close();
 
     	   }
     	   catch(Exception e) {
-    	        LOGGER.severe("An error occurred: " + e.getMessage());
+    	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
     	   }  
 
        }
@@ -213,7 +213,7 @@ public class Admin {
 
     	   }
     	   catch(Exception e) {
-    	        LOGGER.severe("An error occurred: " + e.getMessage());
+    	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
     	   }    
        }
      
@@ -263,7 +263,7 @@ public class Admin {
     		   rs.close();
     	   }
     	   catch(Exception e) {
-    	        LOGGER.severe("An error occurred: " + e.getMessage());
+    	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
     	   }
 
        }
@@ -412,7 +412,7 @@ public class Admin {
     	stm.close();
     		}
     		catch(Exception e) {
-    			e.printStackTrace();
+    	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
     		}
     	   return num > 0;
 
@@ -428,7 +428,7 @@ public class Admin {
     		   rs=stm.executeQuery();
 
     		   while (rs.next()) {
-    			   Customer costomers=new Customer();
+    			   Customer costomers=new Customer(); 
     			   int id=rs.getInt("id");
     			   String name=rs.getString("name");
     			   String email=rs.getString("email");
@@ -442,7 +442,7 @@ public class Admin {
     		   rs.close();
     	   }
     	   catch(Exception e) {
-    	        LOGGER.severe("An error occurred: " + e.getMessage());
+    	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
     	   }
     	   return customer;
        }
@@ -458,17 +458,17 @@ public class Admin {
     		   stm=con.prepareStatement(sql);
     		   rs=stm.executeQuery();
     		   while (rs.next()) {
-    			   LOGGER.info(rs.getString("productname") + TAB_SPACING+ rs.getInt("productquantity") + TAB_SPACING + rs.getInt("productprice") + "$");
+    			   LOGGER.info(String.format("%s\t%d\t%d$", rs.getString("productname"), rs.getInt("productquantity"), rs.getInt("productprice")));
 
     			   price+=rs.getInt("productprice");
     		   }
     		   
-    		   LOGGER.info("Total income="+price+"$");
+    		   LOGGER.info(String.format("Total income=%d$", price));
     		   rs.close();
     		   stm.close();
     	   }
     	   catch(Exception e) {
-    	        LOGGER.severe("An error occurred: " + e.getMessage());
+    	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
     	   }
     	   
     	   
@@ -482,13 +482,18 @@ public class Admin {
     		   rs=stm.executeQuery();
     		   while (rs.next()) {
 
-    			   LOGGER.info(rs.getString("name") + TAB_SPACING);
+    			   String name = rs.getString("name");
+    			   String logMessagee = (name != null) ? String.format("%s%s", name, TAB_SPACING) : "";
+    			   LOGGER.info(logMessagee);
+
 
     	            for (int i = 0; i < rs.getInt("evaluation"); i++) {
     	            	LOGGER.info("* ");
     	            }
 
-    	            LOGGER.info(TAB_SPACING + rs.getInt("userEval"));
+    	            int userEval = rs.getInt("userEval");
+    	            String logMessage = (userEval != 0) ? String.format("%s%d", TAB_SPACING, userEval) : "";
+    	            LOGGER.info(logMessage);
     	            LOGGER.info("\n");
     			   
     		   }
@@ -497,7 +502,7 @@ public class Admin {
     		   stm.close();
     	   }
     	   catch(Exception e) {
-    	        LOGGER.severe("An error occurred: " + e.getMessage());
+    	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
     	   }
     	 
        }
