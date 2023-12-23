@@ -9,7 +9,7 @@ import java.util.Scanner;
 import java.util.logging.Logger;
 
 public class Installer {
-    private static final Logger LOGGER = Logger.getLogger(Login.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Installer.class.getName());
 	Connection con=null;
 	PreparedStatement stm=null;
 	ResultSet rs=null;
@@ -27,6 +27,8 @@ public class Installer {
     private static final String CAR_MODEL_COLUMN = "carmodel";
     private static final String CUSTOMER_PHONE_COLUMN = "customerphone";
     private static final String STREET_COLUMN = "street";
+    private static final String ERROR_PREFIX = "An error occurred: ";
+
     private static final Scanner SCANNER = new Scanner(System.in);
 	public Installer() {
 	
@@ -131,7 +133,7 @@ public class Installer {
 				emaill.sendEmail("ibtihajsami9@gmail.com", subject, body);
 				
 
-			
+			 
 			} 
 			else if(input.equalsIgnoreCase("4")){
 				
@@ -169,16 +171,16 @@ public class Installer {
 			stm.close();
 		}
 		catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 		}
    return num>0;
 
 	}
 	private void connection() throws ClassNotFoundException, SQLException {
-		String password = System.getProperty("database.password");
+		String passworrd = System.getProperty("database.password");
 		Class.forName("com.mysql.jdbc.Driver");
 		String url="jdbc:mysql://localhost/caracc";
-		con=DriverManager.getConnection(url,"root",password);
+		con=DriverManager.getConnection(url,"root",passworrd);
 	}
 	
 public void viewInstaller() {
@@ -211,12 +213,18 @@ public void viewInstaller() {
 				if(!rs.getBoolean("Thuersday")) {
 					day+="  Thuersday";
 				}
-				LOGGER.info(String.format("id= %d %s %s  Phone Number is:%s%nAvaliable ON:%s",
-				        rs.getInt("id"),
-				        rs.getString(FIRST_NAME_COLUMN),
-				        rs.getString(LAST_NAME_COLUMN),
-				        rs.getString("phone_num"),
-				        day));
+				int id = rs.getInt("id");
+				String firstName = (rs.getString(FIRST_NAME_COLUMN) != null) ? rs.getString(FIRST_NAME_COLUMN) : "";
+				String lastName = (rs.getString(LAST_NAME_COLUMN) != null) ? rs.getString(LAST_NAME_COLUMN) : "";
+				String phoneNumber = (rs.getString("phone_num") != null) ? rs.getString("phone_num") : "";
+
+				LOGGER.info(String.format("id=%d %s %s Phone Number is:%s%nAvailable ON:%s",
+				    id,
+				    firstName,
+				    lastName,
+				    phoneNumber,
+				    day
+				));
 
 		}
 			stm.close();
@@ -224,7 +232,7 @@ public void viewInstaller() {
 		}
 
 		catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 		}
 	}
 
@@ -246,7 +254,7 @@ public int getInstallerId(String email) {
 	}
 
 	catch(Exception e) {
-        LOGGER.severe("An error occurred: " + e.getMessage());
+        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 	}
 	return id;
 }
@@ -271,7 +279,7 @@ public String getInstallerName(int id) {
 	}
 
 	catch(Exception e) {
-        LOGGER.severe("An error occurred: " + e.getMessage());
+        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 	}
 	return name;
 }
@@ -284,22 +292,28 @@ public void viewInstallationReq(String name) {
 		
 		
 		while (rs.next()) {
-		int idd=rs.getInt("id");
-		String cname=rs.getString(CUSTOMER_NAME_COLUMN);
-		String req=rs.getString(CUSTOMER_REQ_COLUMN);
-		String carmodel=rs.getString(CAR_MODEL_COLUMN);
-		String day=rs.getString("day");
-		String phonee=rs.getString(CUSTOMER_PHONE_COLUMN);
-		String citty=rs.getString("city");
-		String strreet=rs.getString(STREET_COLUMN);
-		LOGGER.info(String.format("id= %s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", idd, cname, req, carmodel, day, phonee, citty, strreet));
+			int idd = rs.getInt("id");
+			String cname = rs.getString(CUSTOMER_NAME_COLUMN);
+			String req = rs.getString(CUSTOMER_REQ_COLUMN);
+			String carmodel = rs.getString(CAR_MODEL_COLUMN);
+			String day = rs.getString("day");
+			String phonee = rs.getString(CUSTOMER_PHONE_COLUMN);
+			String citty = rs.getString("city");
+			String strreet = rs.getString(STREET_COLUMN);
+
+			if (cname != null && req != null && carmodel != null && day != null && phonee != null && citty != null && strreet != null) {
+			    LOGGER.info(String.format("id= %d\t%s\t%s\t%s\t%s\t%s\t%s\t%s", idd, cname, req, carmodel, day, phonee, citty, strreet));
+			} else {
+			    LOGGER.warning("Some values are null. Unable to log information.");
+			}
+
 	}
 		stm.close();
 		rs.close();
 	}
 
 	catch(Exception e) {
-        LOGGER.severe("An error occurred: " + e.getMessage());
+        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 	}	
 	
 }
@@ -323,7 +337,7 @@ public boolean editDay(String day,int id,boolean validDay) {
 		}
 	}
 	catch(Exception e) {
-        LOGGER.severe("An error occurred: " + e.getMessage());
+        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 	}
 	return flag;
 
@@ -341,7 +355,7 @@ public boolean removeInstallation(int idd) {
  			
  		}
  		catch(Exception e) {
- 	        LOGGER.severe("An error occurred: " + e.getMessage());
+ 	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
  		}
 	 return num != 0;
 }
@@ -363,7 +377,7 @@ public String getInstallationDay(int instid) {
 	}
 
 	catch(Exception e) {
-        LOGGER.severe("An error occurred: " + e.getMessage());
+        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 	}	
 	return day;
 }
@@ -388,7 +402,7 @@ public boolean updateDayforcustomer(int instid,String day){
 	            
 	   		}
 	   		catch(Exception e) {
-	   	        LOGGER.severe("An error occurred: " + e.getMessage());
+	   	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 	   		}
 	 return flagUpdate;
 }
@@ -402,19 +416,23 @@ public boolean veiwInstallationRequestAdmin() {
 		rs=stm.executeQuery();
 	
 		while (rs.next()) {
-		if(!getTest()) {
-		int idd=rs.getInt("id");
-		String cnname=rs.getString(CUSTOMER_NAME_COLUMN);
-		String req=rs.getString(CUSTOMER_REQ_COLUMN);
-		String carmodel=rs.getString(CAR_MODEL_COLUMN);
-		String day=rs.getString("day");
-		String phonee=rs.getString(CUSTOMER_PHONE_COLUMN);
-		String city1=rs.getString("city");
-		String street1=rs.getString(STREET_COLUMN);
-		String installername=rs.getString("installer_name");
-		LOGGER.info(String.format("id= %s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", idd, installername, cnname, req, carmodel, day, phonee, city1, street1));
+			if (!getTest()) {
+			    int idd = rs.getInt("id");
+			    String cnname = rs.getString(CUSTOMER_NAME_COLUMN);
+			    String req = rs.getString(CUSTOMER_REQ_COLUMN);
+			    String carmodel = rs.getString(CAR_MODEL_COLUMN);
+			    String day = rs.getString("day");
+			    String phonee = rs.getString(CUSTOMER_PHONE_COLUMN);
+			    String city1 = rs.getString("city");
+			    String street1 = rs.getString(STREET_COLUMN);
+			    String installername = rs.getString("installer_name");
+			    if (cnname != null && req != null && carmodel != null && day != null && phonee != null && city1 != null && street1 != null && installername != null) {
+			        LOGGER.info(String.format("id= %s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", idd, installername, cnname, req, carmodel, day, phonee, city1, street1));
+			    } else {
+			        LOGGER.warning("Some values are null. Unable to log information.");
+			    }
+			} 
 
-	}
 		else {
 			flag=true;
 		}
@@ -423,7 +441,7 @@ public boolean veiwInstallationRequestAdmin() {
 		rs.close();
 	}
 	catch(Exception e) {
-        LOGGER.severe("An error occurred: " + e.getMessage());
+        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 	}
 	return flag;
 	
@@ -443,7 +461,7 @@ public void viewInstallerAdmin() {
 		   rs.close();
 	   }
 	   catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 	   }
 }
 public boolean removeInstaller(int id) {
@@ -458,7 +476,7 @@ public boolean removeInstaller(int id) {
 			
 		}
 		catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 		} 
 	
 		   return num>0;
@@ -495,7 +513,7 @@ public boolean customerViewInstallation(String name) {
 	}
 
 	catch(Exception e) {
-        LOGGER.severe("An error occurred: " + e.getMessage());
+        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 	}	
 	return flag;
 }
