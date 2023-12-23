@@ -61,80 +61,80 @@ private static final String QUANTITY_LITERAL = "quantity";
 	public int getid() {
 	return customerid;
 	}
-	public void customerDashboard(String user) {
-		int x=0;
-		while(x!=1) {
-			LOGGER.info("Welcome, CUSTOMER!");
-			LOGGER.info("Please choose you want need.");
-			LOGGER.info("1.View category.");
-			LOGGER.info("2.View product.");
-			LOGGER.info("3.Make Installation request.");
-			LOGGER.info("4.View Installation request.");
-			LOGGER.info("5.Search.");
-			LOGGER.info("6.View Shopping cart");
-			LOGGER.info("7.Edit your profile");
-			LOGGER.info("8.Log OUT");
+	// public void customerDashboard(String user) {
+	// 	int x=0;
+	// 	while(x!=1) {
+	// 		LOGGER.info("Welcome, CUSTOMER!");
+	// 		LOGGER.info("Please choose you want need.");
+	// 		LOGGER.info("1.View category.");
+	// 		LOGGER.info("2.View product.");
+	// 		LOGGER.info("3.Make Installation request.");
+	// 		LOGGER.info("4.View Installation request.");
+	// 		LOGGER.info("5.Search.");
+	// 		LOGGER.info("6.View Shopping cart");
+	// 		LOGGER.info("7.Edit your profile");
+	// 		LOGGER.info("8.Log OUT");
 
-			String input=SCANN.nextLine();
-			if(input.equalsIgnoreCase("1")) {// View category
-				product.viewCategories();
-			}
+	// 		String input=SCANN.nextLine();
+	// 		if(input.equalsIgnoreCase("1")) {// View category
+	// 			product.viewCategories();
+	// 		}
 
-			else if(input.equalsIgnoreCase("2")){//View Product
-				LOGGER.info("Enter name of category");
-	              String category=SCANN.nextLine();
-	              ArrayList<Product>prod;
+	// 		else if(input.equalsIgnoreCase("2")){//View Product
+	// 			LOGGER.info("Enter name of category");
+	//               String category=SCANN.nextLine();
+	//               ArrayList<Product>prod;
  	             
-	              prod= product.viewProduct(category);
-	              String vailability;
-		         for(int i=0;i<prod.size();i++) {
-		        	 if(prod.get(i).getQuientity()>0) {
-							vailability="avaliable";
-						}
-						else {
-							vailability="not avaliable";
-						}
-		        	 LOGGER.info(String.format("id=%d\t%s\t%s\t%d$\t%s\t%d star",
-		                     prod.get(i).getId(),
-		                     prod.get(i).getName(),
-		                     prod.get(i).getDescription(),
-		                     prod.get(i).getPrice(),
-		                     vailability,
-		                     oldEvalProduct(prod.get(i).getId())));
-		     			}
-				viewBuy(user);
-			}
+	//               prod= product.viewProduct(category);
+	//               String vailability;
+	// 	         for(int i=0;i<prod.size();i++) {
+	// 	        	 if(prod.get(i).getQuientity()>0) {
+	// 						vailability="avaliable";
+	// 					}
+	// 					else {
+	// 						vailability="not avaliable";
+	// 					}
+	// 	        	 LOGGER.info(String.format("id=%d\t%s\t%s\t%d$\t%s\t%d star",
+	// 	                     prod.get(i).getId(),
+	// 	                     prod.get(i).getName(),
+	// 	                     prod.get(i).getDescription(),
+	// 	                     prod.get(i).getPrice(),
+	// 	                     vailability,
+	// 	                     oldEvalProduct(prod.get(i).getId())));
+	// 	     			}
+	// 			viewBuy(user);
+	// 		}
 			
-			else if(input.equalsIgnoreCase("3")){//to Make Installation request
-                 makeInstallation(user);
-			}
-			else if(input.equalsIgnoreCase("4")){//to view Installation request
-				String name=getCustomerName(user);
+	// 		else if(input.equalsIgnoreCase("3")){//to Make Installation request
+ //                 makeInstallation(user);
+	// 		}
+	// 		else if(input.equalsIgnoreCase("4")){//to view Installation request
+	// 			String name=getCustomerName(user);
 			
-				installer.customerViewInstallation(name);
-			}
-			else if(input.equalsIgnoreCase("5")){//
-				search(user);
-			}
-			else if(input.equalsIgnoreCase("6")){// to View Order
-				order.viewOrder(user);
-				shoppingCart(user);
-			}
-			else if(input.equalsIgnoreCase("7")){// Edit profile
-		     editCustomerProfile(user);
-			}
-			else if(input.equalsIgnoreCase("8")){
+	// 			installer.customerViewInstallation(name);
+	// 		}
+	// 		else if(input.equalsIgnoreCase("5")){//
+	// 			search(user);
+	// 		}
+	// 		else if(input.equalsIgnoreCase("6")){// to View Order
+	// 			order.viewOrder(user);
+	// 			shoppingCart(user);
+	// 		}
+	// 		else if(input.equalsIgnoreCase("7")){// Edit profile
+	// 	     editCustomerProfile(user);
+	// 		}
+	// 		else if(input.equalsIgnoreCase("8")){
 				
-				x=1;
-			} 
-			else {
-				LOGGER.info("Invalid choice. Please enter 1, 2, 3,4,5,6 ,7or 8.");
+	// 			x=1;
+	// 		} 
+	// 		else {
+	// 			LOGGER.info("Invalid choice. Please enter 1, 2, 3,4,5,6 ,7or 8.");
 
-			}
+	// 		}
 
-		}
+	// 	}
 
-	}
+	// }
 	
 
 	public void viewCategoryProduct(String category) {
