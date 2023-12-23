@@ -16,17 +16,14 @@ public class Product {
        Connection con=null;
        PreparedStatement stm=null;
    	   ResultSet rs=null;
-   	private static final Logger LOGGER = Logger.getLogger(Login.class.getName());
+   	private static final Logger LOGGER = Logger.getLogger(Product.class.getName());
    	public static final String CATEGORY_LITERAL = "category";
    	public static final String ID_WHERE_CLAUSE = "' where id='";
    	public static final String DESCRIPTION_LITERAL = "description";
    	public static final String PRICE_LITERAL = "price";
    	public static final String QUANTITY_LITERAL = "quantity";
    	public static final String SELECT_PRODUCT_BY_ID_QUERY = "Select * from product where id='";
-
-
-
-
+    private static final String ERROR_PREFIX = "An error occurred: ";
 
     public Product() {
     	
@@ -109,7 +106,7 @@ public class Product {
 		   			rs.close();
 		   		}
 		   		catch(Exception e) {
-		   	        LOGGER.severe("An error occurred: " + e.getMessage());
+		   	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
 		   		}
 			}   
 	     
@@ -125,13 +122,12 @@ public class Product {
 	    	stm.setInt(4,p.getQuientity());
 	    	stm.setString(5,p.getCategory());
 	    int num=stm.executeUpdate();
-	    if (num!=0)  Admin.setFlaginsertP(true);
-		else Admin.setFlaginsertP(false);
+	    Admin.setFlaginsertP(num != 0);
 		
 	    	stm.close();
 	    		}
 	    		catch(Exception e) {
-	    	        LOGGER.severe("An error occurred: " + e.getMessage());
+	    	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
 	    		} 
 	    	   
 	    	   
@@ -166,7 +162,7 @@ public class Product {
 		            stm.close();
 		   		}
 		   		catch(Exception e) {
-		   	        LOGGER.severe("An error occurred: " + e.getMessage());
+		   	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
 		   		}	    	
 	    	   return num>0;
     	   
@@ -177,13 +173,12 @@ public class Product {
 		   			String sql="Delete from product where ID='" +id+"'and category='"+category+"' ";
 		   			stm=con.prepareStatement(sql);
 		   			int num =stm.executeUpdate();
-		   					if (num!=0)  Admin.setFlagdeleteP(true);
-					else Admin.setFlagdeleteP(false);
+		   			Admin.setFlagdeleteP(num != 0);
 		   			stm.close();
 		   			
 		   		}
 		   		catch(Exception e) {
-		   	        LOGGER.severe("An error occurred: " + e.getMessage());
+		   	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
 		   		}
 	       }
 		
@@ -202,7 +197,7 @@ public class Product {
 			stm.close();
 		}
 		catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
 		}
 		return nname;
 	}
@@ -221,7 +216,7 @@ public class Product {
 			stm.close();
 		}
 		catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
 		}
 		return pricee;
 	}
@@ -239,7 +234,7 @@ public class Product {
 			stm.close();
 		}
 		catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
 		}
 		return quantityy;
 	}	
@@ -258,7 +253,7 @@ public class Product {
 			stm.close();
 		}
 		catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
 		}
 		return iid;
 	}	
@@ -275,7 +270,7 @@ public class Product {
 		            stm.close();
 		   		}
 		   		catch(Exception e) {
-		   	        LOGGER.severe("An error occurred: " + e.getMessage());
+		   	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
 		   		}
 		}
 
@@ -287,25 +282,26 @@ public class Product {
 				stm=con.prepareStatement(sql);
 				rs=stm.executeQuery();
 				if(rs.next()) {
-					Customer.setFlag_search(true);
+					Customer.setFlagSearch(true);
 					Product p=new Product(rs.getInt("id"),rs.getString("name"),rs.getString(DESCRIPTION_LITERAL),rs.getInt(PRICE_LITERAL),rs.getString(CATEGORY_LITERAL));
 					product.add(p);					
 				}
 				else {
-					Customer.setFlag_search(false);;
+					Customer.setFlagSearch(false);
 				}
 			
 				rs.close();
 				stm.close();
 			}
 			catch(Exception e) {
-		        LOGGER.severe("An error occurred: " + e.getMessage());
+		        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
 			}	
-					if(Customer.getFlag_search()) {return product;		}
+					if(Customer.getFlagSearch()) {return product;		}
 					
 					else {
 						return null;
 					}
+					
 		}
 	public ArrayList<Product> searchByPrice( int price) {
 		ArrayList<Product>product=new ArrayList<>();
@@ -317,7 +313,7 @@ public class Product {
 			rs=stm.executeQuery();
 			
 			if(rs.next()) {
-				Customer.setFlag_search(true);
+				Customer.setFlagSearch(true);
 				stm=con.prepareStatement(sql);
 				rs=stm.executeQuery();
 				while (rs.next()) {
@@ -325,16 +321,16 @@ public class Product {
 					product.add(p);				}
 			}
 			else {
-				Customer.setFlag_search(false);
+				Customer.setFlagSearch(false);
 			}
 
 			rs.close();
 			stm.close();
 		}
 		catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
 		}	
-if(Customer.getFlag_search()) {return product;		}
+if(Customer.getFlagSearch()) {return product;		}
 		
 		else {
 			 return new ArrayList<>();
@@ -353,7 +349,7 @@ if(Customer.getFlag_search()) {return product;		}
 			
 			if(rs.next()) {
 				
-				Customer.setFlag_search(true);
+				Customer.setFlagSearch(true);
 				
 				stm=con.prepareStatement(sql);
 				rs=stm.executeQuery();
@@ -362,16 +358,16 @@ if(Customer.getFlag_search()) {return product;		}
 					product.add(p);					}
 			}
 			else {
-				Customer.setFlag_search(false);
+				Customer.setFlagSearch(false);
 			}
 
 			rs.close();
 			stm.close();
 		}
 		catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
 		}	
-		if(Customer.getFlag_search()) {
+		if(Customer.getFlagSearch()) {
 			return product;	
 		}
 		
@@ -407,7 +403,7 @@ if(Customer.getFlag_search()) {return product;		}
     		   rs.close();
     	   }
     	   catch(Exception e) {
-    	        LOGGER.severe("An error occurred: " + e.getMessage());
+    	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
     	   }
     	   return product;	
        }
