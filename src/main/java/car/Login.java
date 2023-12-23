@@ -36,7 +36,7 @@ public class Login {
 
 			}
 			else {
-				setFlagemail(true);
+				setFlagemail(false);
 			}
 			stm.close();
 			rs.close();
@@ -236,7 +236,8 @@ stm.close();
 
 	public void mainMenue() {
 		LOGGER.info("Welcome to Carr Accessories company");
-		while(true) {
+		 int x=0;
+  	   while(x!=1) {
 			LOGGER.info("Please choose between the specific users");
 			LOGGER.info("1-Admin");
 			LOGGER.info("2-Customer");
@@ -258,12 +259,11 @@ stm.close();
 			}
 			else if(scan.equalsIgnoreCase("4")){
 				LOGGER.info("you log out succesfully");
-
-				System.exit(0);
+				 x=1;
 			}
 			else {
 				LOGGER.info("please make sure to enter the right user");
-
+                 
 			}
 
 		}
