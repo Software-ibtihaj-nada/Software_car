@@ -34,6 +34,11 @@
 				
 			</execution>
 	</executions>
+	  <configuration>
+                <excludes>
+                    <exclude>car/Customer.java:customerDashboard</exclude>
+                </excludes>
+            </configuration>
 </plugin>
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
