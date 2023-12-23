@@ -7,8 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 public class Order {
-    private static final Logger LOGGER = Logger.getLogger(Login.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Order.class.getName());
     private static final String PRODUCT_PRICE = "productprice";
+    private static final String ERROR_PREFIX = "An error occurred: ";
 
 	Connection con=null;
 	PreparedStatement stm=null;
@@ -104,7 +105,7 @@ public class Order {
  		   stm.close();
  	   }
  	   catch(Exception e) {
- 	        LOGGER.severe("An error occurred: " + e.getMessage());
+ 	        LOGGER.severe(ERROR_PREFIX+ e.getMessage());
  	   }
  	   return flag;
     }
@@ -132,17 +133,12 @@ public class Order {
 			    	
 			    	stm.setBoolean(7,false);
 			    int num=stm.executeUpdate();
-		if(num>0) {
-			Customer.setFinsertOrder(true);
-		}
-		else {
-			Customer.setFinsertOrder(false);
-		}
+			    Customer.setFinsertOrder(num > 0);
 			
 			stm.close();
 		}
 		catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 		}
 
 	}
@@ -164,7 +160,7 @@ public class Order {
 			stm.close();
 		}
 		catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 		}
 		
 		return idd;
@@ -191,7 +187,7 @@ public boolean updateOrder(int orderId,int quantity ) {
 	            
 	   		}
 	   		catch(Exception e) {
-	   	        LOGGER.severe("An error occurred: " + e.getMessage());
+	   	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 	   		}
 	 return flagUpdate;
 }
@@ -202,13 +198,12 @@ public void deleteOrder(int orderId) {
   			String sql="Delete from orders where ID='" +orderId+"' ";
   			stm=con.prepareStatement(sql);
   			int num =stm.executeUpdate();
-  					if (num!=0) Customer.setFlagDeleteO(true);
-			else Customer.setFlagDeleteO(false);
+  			Customer.setFlagDeleteO(num != 0);
   			stm.close();
   			
   		}
   		catch(Exception e) {
-  	        LOGGER.severe("An error occurred: " + e.getMessage());
+  	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
   		}
 
 
@@ -241,7 +236,7 @@ public boolean viewOrder(String customername) {
 		
 	}
 	catch(Exception e) {
-        LOGGER.severe("An error occurred: " + e.getMessage());
+        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 	}
 	return flag1;
 }
