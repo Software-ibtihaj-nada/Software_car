@@ -11,6 +11,8 @@ public class Login {
 	private static final Scanner SCANNER = new Scanner(System.in);
     public static final String ADMIN_ROLE = "admin";
     private static final String INSTALLER = "installer";
+    private static final String ERROR_PREFIX = "An error occurred: ";
+
 	private String scan; 
 	private static boolean flaglogin=false;
 	private static boolean flagemail=false;
@@ -22,7 +24,7 @@ public class Login {
     private static  boolean flagname=false;
     private static boolean flagconfpass=false;
     Installer installer=new Installer();
-	public Login() {
+	public Login() { 
 		setIsLoginPage(true);
 	}
 	public static void checkEmail(String email,String usertype) {
@@ -43,7 +45,7 @@ public class Login {
 
 		}
 		catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 		}
 
 	}
@@ -55,18 +57,14 @@ public class Login {
 			String sql="Select email from users where email='" +email+"'and password='" +pass+"' ";
 			stm=con.prepareStatement(sql);
 			rs=stm.executeQuery();
-			if (!rs.next()) {
-				setFlagPass(false);
-			}
-			else{
-				setFlagPass(true);
-			}
+			setFlagPass(!rs.next());
+
 stm.close();
 rs.close();
 
 		}
 		catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+	        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 		}
 
 	}
@@ -132,7 +130,7 @@ stm.executeUpdate();
 stm.close();
 	}
 	catch(Exception e) {
-        LOGGER.severe("An error occurred: " + e.getMessage());
+        LOGGER.severe(ERROR_PREFIX + e.getMessage());
 	}
 }
 	public void regesterUser(String email,String username,String password,String confirmPassword,String usertype) {
@@ -210,7 +208,7 @@ stm.close();
 		if(!getFlaglogin()) {
 			if(!usertype.equalsIgnoreCase(ADMIN_ROLE)&&!usertype.equalsIgnoreCase(INSTALLER)){
 				LOGGER.info("1- sign up");
-			}
+		 	}
 			LOGGER.info("2- login");
 			LOGGER.info("3- go back");
 			scan=SCANNER.nextLine();
