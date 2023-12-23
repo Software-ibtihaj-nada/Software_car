@@ -76,11 +76,11 @@ private static final String QUANTITY_LITERAL = "quantity";
 			LOGGER.info("8.Log OUT");
 
 			String input=SCANN.nextLine();
-			if(input.equalsIgnoreCase("1")) {
+			if(input.equalsIgnoreCase("1")) {// View category
 				product.viewCategories();
 			}
 
-			else if(input.equalsIgnoreCase("2")){
+			else if(input.equalsIgnoreCase("2")){//View Product
 				LOGGER.info("Enter name of category");
 	              String category=SCANN.nextLine();
 	              ArrayList<Product>prod;
@@ -105,22 +105,22 @@ private static final String QUANTITY_LITERAL = "quantity";
 				viewBuy(user);
 			}
 			
-			else if(input.equalsIgnoreCase("3")){
+			else if(input.equalsIgnoreCase("3")){//to Make Installation request
                  makeInstallation(user);
 			}
-			else if(input.equalsIgnoreCase("4")){
+			else if(input.equalsIgnoreCase("4")){//to view Installation request
 				String name=getCustomerName(user);
 			
 				installer.customerViewInstallation(name);
 			}
-			else if(input.equalsIgnoreCase("5")){
+			else if(input.equalsIgnoreCase("5")){//
 				search(user);
 			}
-			else if(input.equalsIgnoreCase("6")){
+			else if(input.equalsIgnoreCase("6")){// to View Order
 				order.viewOrder(user);
 				shoppingCart(user);
 			}
-			else if(input.equalsIgnoreCase("7")){
+			else if(input.equalsIgnoreCase("7")){// Edit profile
 		     editCustomerProfile(user);
 			}
 			else if(input.equalsIgnoreCase("8")){
@@ -166,7 +166,7 @@ private static final String QUANTITY_LITERAL = "quantity";
 		}
 
 		catch(Exception e) {
-	        LOGGER.severe("An error occurred: " + e.getMessage());
+			e.printStackTrace();
 		}
 
 	}
